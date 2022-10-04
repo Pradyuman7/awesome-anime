@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <title>Pusher Test</title>
+    <script type="text/javascript" src="assets/scripts/jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" src="assets/scripts/toastify.min.js"></script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script>
+        const pusher = new Pusher('292aa1a39425b07e11bd', {
+            cluster: 'eu'
+        });
+
+        const channel = pusher.subscribe('anime-channel');
+        channel.bind('anime-choice-event', function(data) {
+            let animePrimaryName = data.Anime;
+            console.log(animePrimaryName);
+            $.getJSON("https://anipi.herokuapp.com/api/titles/info/anime/" + animePrimaryName, function(data) {
+                console.log(data);
+                $("#anime-name").text(data.Name);
+            });
+
+            Toastify({
+                text: "Updated anime",
+                duration: 1000,
+                newWindow: true,
+                close: true,
+                gravity: "bottom",
+                position: "right",
+                backgroundColor: "transparent",
+                className: "toast",
+                stopOnFocus: true,
+                offset: {
+                    x: '0.1rem',
+                    y: '14rem'
+                },
+            }).showToast();
+
+            let image = new Image();
+            image.onload = function () {
+                $("#bgimg").css("background-image", "url('" + image.src + "')");
+            }
+            image.src = data.Url;
+        });
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="assets/css/toastify.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+<body>
+    <div id="bgimg">
+        <div class="top">
+            <span class="span" id="anime-name">waiting for the anime</span>
+        </div>
+    </div>
+</body>
