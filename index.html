@@ -9,7 +9,7 @@
             cluster: 'eu'
         });
 
-        const channel = pusher.subscribe('anime-channel');
+        const channel = pusher.subscribe('cache-anime-channel');
         channel.bind('anime-choice-event', function(data) {
             let animePrimaryName = data.Anime;
             console.log(animePrimaryName);
